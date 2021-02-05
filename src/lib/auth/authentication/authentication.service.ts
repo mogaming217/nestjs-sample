@@ -1,15 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
+export interface AuthUser {
+  userID: string;
+}
+
 @Injectable()
 export class AuthenticationService {
-  private _userID: string | null;
-  get userID() {
-    return this._userID;
-  }
-
-  async verify(token: string): Promise<{ userID: string } | undefined> {
-    // TODO: verify token
-    this._userID = token;
-    return { userID: this._userID };
+  async verify(token?: string): Promise<AuthUser | null> {
+    if (!token) return null;
+    return { userID: token };
   }
 }

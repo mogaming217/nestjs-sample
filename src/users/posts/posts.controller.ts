@@ -1,5 +1,9 @@
 import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { AuthenticationGuard } from 'src/guard/authentication.guard';
+import {
+  Authentication,
+  AuthenticationGuard,
+  AuthenticationParams,
+} from 'src/guard/authentication.guard';
 import { AuthenticationService } from 'src/lib/auth/authentication/authentication.service';
 
 @Controller('users/:userID/posts')
@@ -13,9 +17,9 @@ export class PostsController {
 
   @Post()
   @UseGuards(AuthenticationGuard)
-  create() {
+  create(@Authentication() authUser: AuthenticationParams) {
     return {
-      userID: this.authenticationService.userID,
+      userID: authUser?.userID,
     };
   }
 }

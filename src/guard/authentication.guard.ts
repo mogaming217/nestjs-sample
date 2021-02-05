@@ -1,6 +1,21 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  createParamDecorator,
+  ExecutionContext,
+  Injectable,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { AuthenticationService } from 'src/lib/auth/authentication/authentication.service';
+import { AuthUser } from 'src/lib/auth/authentication/authentication.service';
+
+export type AuthenticationParams = AuthUser | undefined;
+
+export const Authentication = createParamDecorator(
+  (_, context: ExecutionContext): AuthenticationParams => {
+    const req = context.switchToHttp().getRequest();
+    return req.authInfo;
+  },
+);
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -11,8 +26,8 @@ export class AuthenticationGuard implements CanActivate {
     const authHeader = req.headers.authorization;
     // TODO: tokenの取り出しやエラーハンドリング
     if (authHeader) {
-      console.log('verify');
-      await this.authenticationService.verify(authHeader);
+      const result = await this.authenticationService.verify(authHeader);
+      (req as any).authInfo = result;
     } else {
       console.log('not to verify');
     }
