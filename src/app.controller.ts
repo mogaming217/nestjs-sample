@@ -7,6 +7,6 @@ export class AppController {
 
   @Get()
   get(@Query('q') q?: string): string {
-    return this.appService.getHello(q);
+    return this.appService.getHello(q ?? 'none');
   }
 }
