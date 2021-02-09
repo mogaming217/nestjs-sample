@@ -5,6 +5,8 @@ services:
     environment:
       POSTGRES_USER: dev
       POSTGRES_PASSWORD: dev
-      POSTGRES_DB: nestjs-sample
+      POSTGRES_DB: nestjssample
     ports:
       - 15432:5432
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
